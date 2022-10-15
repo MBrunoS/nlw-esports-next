@@ -1,6 +1,6 @@
 # NLW eSports
 
-This project was based on the NLW eSports provided by Rocketseat. Here, I added some extra features, like:
+This project was based on the NLW eSports organized by Rocketseat. Here on this repo, I added some extra features:
 
 - Responsiveness
 - Next.js
