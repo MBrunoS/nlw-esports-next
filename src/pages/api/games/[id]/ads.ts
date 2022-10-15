@@ -19,6 +19,7 @@ export default async function handler(
         yearsPlaying: true,
         hourStart: true,
         hourEnd: true,
+        discord: true,
       },
       where: {
         gameId,

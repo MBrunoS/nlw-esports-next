@@ -7,23 +7,25 @@ import * as Select from "@radix-ui/react-select";
 import { Check, GameController, CaretDown, CaretUp } from "phosphor-react";
 import toast from "react-hot-toast";
 import { Input } from "./Form/Input";
+import { Button } from "./Button";
 
 interface Game {
   id: string;
   title: string;
 }
 
-export const CreateAdModal: React.FC = () => {
-  const [games, setGames] = useState<Game[]>([]);
+interface CreateAdModalProps {
+  games: Game[];
+  onClose: () => void;
+}
+
+export const CreateAdModal: React.FC<CreateAdModalProps> = ({
+  games,
+  onClose,
+}) => {
   const [weekdays, setWeekdays] = useState<string[]>([]);
   const [useVoiceChannel, setUseVoiceChannel] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-
-  useEffect(() => {
-    axios("http://localhost:3000/api/games").then((response) =>
-      setGames(response.data)
-    );
-  }, []);
 
   const handleCreateAd = async (event: FormEvent) => {
     event.preventDefault();
@@ -48,6 +50,7 @@ export const CreateAdModal: React.FC = () => {
 
       setIsSaving(false);
       toast.success("Anúncio criado com sucesso");
+      onClose();
     } catch (error) {
       console.log(error);
       toast.error("Erro ao criar anúncio");
@@ -58,8 +61,8 @@ export const CreateAdModal: React.FC = () => {
     <Dialog.Portal>
       <Dialog.Overlay className="bg-black/60 inset-0 fixed" />
 
-      <Dialog.Content className="fixed bg-[#2a2634] px-10 py-8 text-white top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-lg w-[480px] shadow-lg shadow-black/25">
-        <Dialog.Title className="text-3xl font-black">
+      <Dialog.Content className="fixed bg-[#2a2634] px-4 md:px-10 py-8 text-white top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-lg w-[95%] md:w-[480px] max-h-[100%] shadow-lg shadow-black/25 overflow-y-auto">
+        <Dialog.Title className="text-2xl md:text-3xl font-black">
           Publique um anúncio
         </Dialog.Title>
 
@@ -106,7 +109,7 @@ export const CreateAdModal: React.FC = () => {
             </Select.Root>
           </div>
 
-          <div>
+          <div className="flex flex-col gap-2">
             <label htmlFor="name">Seu nome (ou nickname)</label>
             <Input
               id="name"
@@ -252,14 +255,7 @@ export const CreateAdModal: React.FC = () => {
             <Dialog.Close className="bg-zinc-500 px-5 h-12 rounded-md font-semibold hover:bg-zinc-600">
               Cancelar
             </Dialog.Close>
-            <button
-              type="submit"
-              disabled={isSaving}
-              className="bg-violet-500 px-5 h-12 rounded-md font-semibold flex items-center gap-3 hover:bg-violet-600"
-            >
-              <GameController size={24} />
-              Encontrar duo
-            </button>
+            <Button disabled={isSaving}>Encontrar duo</Button>
           </footer>
         </form>
       </Dialog.Content>

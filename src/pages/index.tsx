@@ -1,14 +1,13 @@
-import * as Dialog from "@radix-ui/react-dialog";
-import axios from "axios";
-import type { NextPage } from "next";
 import Head from "next/head";
-import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import axios from "axios";
+import * as Dialog from "@radix-ui/react-dialog";
+import type { GetServerSideProps, NextPage } from "next";
 import CreateAdBanner from "../components/CreateAdBanner";
 import { CreateAdModal } from "../components/CreateAdModal";
 import { GameBanner } from "../components/GameBanner";
-import logoImg from "../assets/logo-nlw-esports.svg";
-import { Toaster } from "react-hot-toast";
+
+import Layout from "../components/Layout";
 
 interface Game {
   id: string;
@@ -19,15 +18,12 @@ interface Game {
   };
 }
 
-const Home: NextPage = () => {
-  const [games, setGames] = useState<Game[]>([]);
+interface HomePageProps {
+  games: Game[];
+}
 
-  useEffect(() => {
-    axios("http://localhost:3000/api/games").then((response) =>
-      setGames(response.data)
-    );
-  }, []);
-
+const HomePage: NextPage<HomePageProps> = ({ games }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   return (
     <>
       <Head>
@@ -36,9 +32,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <div className="max-w-[1344px] px-2 mx-auto flex flex-col items-center my-20">
-        <Image src={logoImg} alt="NLW eSports" />
-
+      <Layout>
         <h1 className="text-4xl sm:text-6xl text-white font-black my-20 text-center">
           Seu{" "}
           <span className="bg-nlw-gradient text-transparent bg-clip-text">
@@ -54,19 +48,28 @@ const Home: NextPage = () => {
               adsCount={game._count.ads}
               bannerUrl={game.bannerUrl}
               key={game.id}
+              id={game.id}
             />
           ))}
         </div>
 
-        <Dialog.Root>
-          <CreateAdBanner />
-          <CreateAdModal />
+        <Dialog.Root open={isModalOpen}>
+          <CreateAdBanner onOpen={() => setIsModalOpen(true)} />
+          <CreateAdModal games={games} onClose={() => setIsModalOpen(false)} />
         </Dialog.Root>
-      </div>
-
-      <Toaster />
+      </Layout>
     </>
   );
 };
 
-export default Home;
+export const getServerSideProps: GetServerSideProps = async () => {
+  const { data } = await axios("http://localhost:3000/api/games");
+
+  return {
+    props: {
+      games: data,
+    },
+  };
+};
+
+export default HomePage;
