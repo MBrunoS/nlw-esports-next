@@ -12,7 +12,7 @@ const GamePage: NextPage<GamePageProps> = ({ duos }) => {
     <Layout>
       <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 my-20">
         {duos.map((item) => (
-          <DuoCard data={item} />
+          <DuoCard data={item} key={item.id} />
         ))}
       </div>
     </Layout>
