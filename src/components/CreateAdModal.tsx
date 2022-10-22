@@ -8,6 +8,7 @@ import { Check, GameController, CaretDown, CaretUp } from "phosphor-react";
 import toast from "react-hot-toast";
 import { Input } from "./Form/Input";
 import { Button } from "./Button";
+import { api } from "../services/api";
 
 interface Game {
   id: string;
@@ -38,7 +39,7 @@ export const CreateAdModal: React.FC<CreateAdModalProps> = ({
     setIsSaving(true);
 
     try {
-      await axios.post(`http://localhost:3000/api/games/${data.game}/ads`, {
+      await api.post(`/api/games/${data.game}/ads`, {
         name: data.name,
         yearsPlaying: Number(data.yearsPlaying),
         discord: data.discord,

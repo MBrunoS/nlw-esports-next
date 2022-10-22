@@ -2,6 +2,10 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-}
+  images: {
+    formats: ["image/avif", "image/webp"],
+    domains: ["static-cdn.jtvnw.net"],
+  },
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;

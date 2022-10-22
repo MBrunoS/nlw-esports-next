@@ -1,12 +1,11 @@
 import Head from "next/head";
 import { useState } from "react";
-import axios from "axios";
 import * as Dialog from "@radix-ui/react-dialog";
 import type { GetServerSideProps, NextPage } from "next";
 import CreateAdBanner from "../components/CreateAdBanner";
 import { CreateAdModal } from "../components/CreateAdModal";
 import { GameBanner } from "../components/GameBanner";
-
+import { api } from "../services/api";
 import Layout from "../components/Layout";
 
 interface Game {
@@ -63,7 +62,7 @@ const HomePage: NextPage<HomePageProps> = ({ games }) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const { data } = await axios("http://localhost:3000/api/games");
+  const { data } = await api.get("/api/games");
 
   return {
     props: {

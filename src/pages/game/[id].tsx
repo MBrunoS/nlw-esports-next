@@ -2,6 +2,7 @@ import axios from "axios";
 import { GetServerSideProps, NextPage } from "next";
 import { DuoCard, DuoCardProps } from "../../components/DuoCard";
 import Layout from "../../components/Layout";
+import { api } from "../../services/api";
 
 interface GamePageProps {
   duos: DuoCardProps[];
@@ -20,9 +21,7 @@ const GamePage: NextPage<GamePageProps> = ({ duos }) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
-  const { data } = await axios(
-    `http://localhost:3000/api/games/${params?.id}/ads`
-  );
+  const { data } = await api.get(`/api/games/${params?.id}/ads`);
 
   return {
     props: {
