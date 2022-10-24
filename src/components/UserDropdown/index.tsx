@@ -14,9 +14,7 @@ export const UserDropdown: React.FC<Props> = ({ userImg }) => {
       inline={true}
       label={<Avatar alt="User settings" img={userImg} rounded={true} />}
     >
-      <Dropdown.Item onClick={() => signOut()} icon={SignOut}>
-        Sair
-      </Dropdown.Item>
+      <Dropdown.Item onClick={() => signOut()}>Sair</Dropdown.Item>
     </Dropdown>
   );
 };
