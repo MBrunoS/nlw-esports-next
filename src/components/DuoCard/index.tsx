@@ -38,7 +38,7 @@ export function DuoCard({ data }: Props) {
       />
 
       <CopyToClipboard text={data.discord} onCopy={handleCopyToClipboard}>
-        <Button className="text-white" icon={<></>}>
+        <Button className="text-white w-full justify-center" icon={<></>}>
           Discord: {data.discord}
         </Button>
       </CopyToClipboard>

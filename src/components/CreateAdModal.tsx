@@ -1,10 +1,10 @@
-import React, { FormEvent, useEffect, useState } from "react";
-import axios from "axios";
+import React, { FormEvent, useState } from "react";
+import { useSession } from "next-auth/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as Checkbox from "@radix-ui/react-checkbox";
 import * as ToggleGroup from "@radix-ui/react-toggle-group";
 import * as Select from "@radix-ui/react-select";
-import { Check, GameController, CaretDown, CaretUp } from "phosphor-react";
+import { Check, CaretDown, CaretUp } from "phosphor-react";
 import toast from "react-hot-toast";
 import { Input } from "./Form/Input";
 import { Button } from "./Button";
@@ -27,6 +27,7 @@ export const CreateAdModal: React.FC<CreateAdModalProps> = ({
   const [weekdays, setWeekdays] = useState<string[]>([]);
   const [useVoiceChannel, setUseVoiceChannel] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const { data: session } = useSession();
 
   const handleCreateAd = async (event: FormEvent) => {
     event.preventDefault();
@@ -42,7 +43,7 @@ export const CreateAdModal: React.FC<CreateAdModalProps> = ({
       await api.post(`/api/games/${data.game}/ads`, {
         name: data.name,
         yearsPlaying: Number(data.yearsPlaying),
-        discord: data.discord,
+        discord: `${session?.user.name}#${session?.user.discriminator}`,
         weekdays: weekdays.map(Number),
         hourStart: data.hourStart,
         hourEnd: data.hourEnd,
@@ -130,18 +131,6 @@ export const CreateAdModal: React.FC<CreateAdModalProps> = ({
               />
             </div>
             <div className="flex flex-col gap-2">
-              <label htmlFor="discord">Qual seu Discord?</label>
-              <Input
-                type="text"
-                id="discord"
-                name="discord"
-                placeholder="Usuário#0000"
-              />
-            </div>
-          </div>
-
-          <div className="flex gap-6">
-            <div className="flex flex-col gap-2">
               <label htmlFor="weekdays">Quando costuma jogar?</label>
               <ToggleGroup.Root
                 type="multiple"
@@ -214,6 +203,9 @@ export const CreateAdModal: React.FC<CreateAdModalProps> = ({
                 </ToggleGroup.Item>
               </ToggleGroup.Root>
             </div>
+          </div>
+
+          <div className="flex gap-6">
             <div className="flex flex-col gap-2 flex-1">
               <label htmlFor="hourStart">Qual horário do dia?</label>
               <div className="grid grid-cols-2 gap-2">
@@ -253,7 +245,10 @@ export const CreateAdModal: React.FC<CreateAdModalProps> = ({
           </label>
 
           <footer className="mt-4 flex justify-end gap-4">
-            <Dialog.Close className="bg-zinc-500 px-5 h-12 rounded-md font-semibold hover:bg-zinc-600">
+            <Dialog.Close
+              className="bg-zinc-500 px-5 h-12 rounded-md font-semibold hover:bg-zinc-600"
+              onClick={onClose}
+            >
               Cancelar
             </Dialog.Close>
             <Button disabled={isSaving}>Encontrar duo</Button>
