@@ -8,6 +8,7 @@ export default NextAuth({
       clientSecret: process.env.DISCORD_CLIENT_SECRET as string,
     }),
   ],
+  secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
     async jwt({ token, profile }) {
       profile && (token.discriminator = profile?.discriminator);
